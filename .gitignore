@@ -1,0 +1,7 @@
+*.user
+[Bb]in/
+[Oo]bj/
+/lib/
+.vs/
+MigrationBackup/
+template/

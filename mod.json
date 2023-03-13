@@ -1,0 +1,6 @@
+{
+    "name": "Enhanced Debug",
+    "version": "v1.0.0",
+    "preload": [],
+    "entrypoint": [ "EnhancedDebug.dll" ]
+}
