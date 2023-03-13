@@ -1,13 +1,6 @@
-# EnhancedDebug
+# Enhanced Debug
 
-TODO improve developer workflow
+Currently adds 2 features while debug controls are on:
 
-## Usage
-
-* Build
-* Copy dll to mod directory
-* Manually add the mod info to manifest.json
-
-## Adding to mod manager
-
-See [the mod index GitHub page](https://github.com/Kirefel/ori-bf-mod-index) to add your mod to the manager
+* Right click on the main map to teleport to the cursor position
+* Frame step - press `.` to toggle and `/` to step one frame

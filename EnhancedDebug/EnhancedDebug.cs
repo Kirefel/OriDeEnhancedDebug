@@ -13,8 +13,10 @@ namespace EnhancedDebug
         public void Init()
         {
             harmony = new Harmony("enhanced_debug");
-            
-            Controllers.Add<EnhancedDebugController>();
+            harmony.PatchAll();
+
+            Controllers.Add<EnhancedDebugController>(group: "EnhancedDebug");
+            Controllers.Add<FrameStepController>(group: "EnhancedDebug");
         }
 
         public void Unload()
