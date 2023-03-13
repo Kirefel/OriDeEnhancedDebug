@@ -7,9 +7,12 @@ namespace EnhancedDebug
     {
         private void Awake()
         {
-            // Enable debug controls on game launch
-            DebugMenuB.MakeDebugMenuExist();
-            DebugMenuB.DebugControlsEnabled = true;
+            if (Settings.AutoEnable.Value)
+            {
+                // Enable debug controls on game launch
+                DebugMenuB.MakeDebugMenuExist();
+                DebugMenuB.DebugControlsEnabled = true;
+            }
         }
 
         private void FixedUpdate()

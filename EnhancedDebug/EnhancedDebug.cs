@@ -1,6 +1,7 @@
 ﻿using BaseModLib;
 using HarmonyLib;
 using OriDeModLoader;
+using OriDeModLoader.UIExtensions;
 
 namespace EnhancedDebug
 {
@@ -14,6 +15,8 @@ namespace EnhancedDebug
         {
             harmony = new Harmony("enhanced_debug");
             harmony.PatchAll();
+
+            CustomMenuManager.RegisterOptionsScreen<EnhancedDebugSettingsScreen>("DEBUG", 100);
 
             Controllers.Add<EnhancedDebugController>(group: "EnhancedDebug");
             Controllers.Add<FrameStepController>(group: "EnhancedDebug");
