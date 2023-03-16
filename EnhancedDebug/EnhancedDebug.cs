@@ -2,6 +2,7 @@
 using HarmonyLib;
 using OriDeModLoader;
 using OriDeModLoader.UIExtensions;
+using UnityEngine;
 
 namespace EnhancedDebug
 {
@@ -15,6 +16,12 @@ namespace EnhancedDebug
         {
             harmony = new Harmony("enhanced_debug");
             harmony.PatchAll();
+
+            if (Settings.HighAccuracyFrameStep.Value)
+            {
+                Debug.Log("Enabling high accuracy frame step");
+                FrameStepUpdateHooks.PatchAll(harmony);
+            }
 
             CustomMenuManager.RegisterOptionsScreen<EnhancedDebugSettingsScreen>("DEBUG", 100);
 

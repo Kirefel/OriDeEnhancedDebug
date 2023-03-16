@@ -11,7 +11,7 @@ namespace EnhancedDebug
         private static bool Prefix()
         {
             // Returning false causes the original method to be skipped
-            return !FrameStepController.ShouldSkipInput;
+            return !FrameStepController.Suspended;
         }
     }
 
@@ -34,9 +34,7 @@ namespace EnhancedDebug
         private bool suspensionPending = false;
         private bool resumePending = false;
 
-        private bool suspended = false;
-
-        public static bool ShouldSkipInput { get; private set; } = false;
+        public static bool Suspended { get; private set; } = false;
 
         private void StartLoop()
         {
@@ -60,16 +58,14 @@ namespace EnhancedDebug
         {
             SuspensionManager.SuspendAll();
             suspensionPending = false;
-            suspended = true;
-            ShouldSkipInput = true;
+            Suspended = true;
         }
 
         private void Resume()
         {
             SuspensionManager.ResumeAll();
-            suspended = false;
+            Suspended = false;
             resumePending = false;
-            ShouldSkipInput = false;
         }
 
         private void Start()
@@ -84,14 +80,14 @@ namespace EnhancedDebug
         {
             if (Input.GetKeyDown(Controls.StepPause))
             {
-                if (suspended)
+                if (Suspended)
                     resumePending = true;
                 else if (DebugMenuB.DebugControlsEnabled)
                     suspensionPending = true;
             }
 
             // Step single frame
-            if (suspended && Input.GetKeyDown(Controls.Step))
+            if (Suspended && Input.GetKeyDown(Controls.Step))
             {
                 resumePending = true;
                 suspensionPending = true;
@@ -100,11 +96,11 @@ namespace EnhancedDebug
 
         private void LateFixedUpdate()
         {
-            if (suspended && resumePending)
+            if (Suspended && resumePending)
             {
                 Resume();
             }
-            else if (!suspended && suspensionPending)
+            else if (!Suspended && suspensionPending)
             {
                 CollectInputsFromFrame();
                 Suspend();
