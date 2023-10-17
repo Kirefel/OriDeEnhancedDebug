@@ -24,7 +24,7 @@ public class Plugin : BaseUnityPlugin
             "Debug",
             "High Accuracy Frame Step",
             false,
-            "(Experimental) Whether an alternative frame step method should be used. More accurate but not thoroughly tested. Requires restart to change.");
+            "(Experimental) Whether an alternative frame step method should be used. More accurate but not thoroughly tested.");
 
         AutoEnable = Config.Bind(
             "Debug",
@@ -45,6 +45,20 @@ public class Plugin : BaseUnityPlugin
             Logger.LogInfo("Enabling high accuracy frame step");
             FrameStepUpdateHooks.PatchAll(harmony);
         }
+
+        HighAccuracyFrameStep.SettingChanged += (sender, e) =>
+        {
+            if (HighAccuracyFrameStep.Value)
+            {
+                Logger.LogInfo("Enabling high accuracy frame step");
+                FrameStepUpdateHooks.PatchAll(harmony);
+            }
+            else
+            {
+                Logger.LogInfo("Disabling high accuracy frame step");
+                harmony.UnpatchSelf();
+            }
+        };
 
         Controllers.Add<EnhancedDebugController>(group: "EnhancedDebug");
         Controllers.Add<FrameStepController>(group: "EnhancedDebug");
