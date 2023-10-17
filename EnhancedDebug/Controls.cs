@@ -1,10 +1,9 @@
 ﻿using UnityEngine;
 
-namespace EnhancedDebug
+namespace KFT.OriBF.EnhancedDebug;
+
+public class Controls
 {
-    public class Controls
-    {
-        public static KeyCode StepPause = KeyCode.Period;
-        public static KeyCode Step = KeyCode.Slash;
-    }
+    public static KeyCode StepPause = KeyCode.Period;
+    public static KeyCode Step = KeyCode.Slash;
 }

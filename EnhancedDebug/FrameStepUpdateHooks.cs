@@ -1,52 +1,51 @@
 ﻿using HarmonyLib;
-using OriDeModLoader;
+using OriModding.BF.Core;
 using System;
 using System.Collections.Generic;
 using System.Reflection;
 
-namespace EnhancedDebug
+namespace KFT.OriBF.EnhancedDebug;
+
+public static class FrameStepUpdateHooks
 {
-    public static class FrameStepUpdateHooks
+    private static HashSet<Type> allowList = new HashSet<Type>() { typeof(PlayerInput) };
+
+    public static void PatchAll(Harmony harmony)
     {
-        private static HashSet<Type> allowList = new HashSet<Type>() { typeof(PlayerInput) };
+        HarmonyMethod prefixMethod = new HarmonyMethod(typeof(FrameStepUpdateHooks), nameof(Prefix));
 
-        public static void PatchAll(Harmony harmony)
+        Type[] types = typeof(SeinController).Assembly.GetTypes();
+        foreach (var type in types)
         {
-            HarmonyMethod prefixMethod = new HarmonyMethod(typeof(FrameStepUpdateHooks), nameof(Prefix));
-
-            Type[] types = typeof(SeinController).Assembly.GetTypes();
-            foreach (var type in types)
+            try
             {
-                try
-                {
-                    if (allowList.Contains(type) || typeof(ISuspendable).IsAssignableFrom(type))
-                        continue;
+                if (allowList.Contains(type) || typeof(ISuspendable).IsAssignableFrom(type))
+                    continue;
 
-                    PatchMethod(harmony, type, "Update", prefixMethod);
-                    PatchMethod(harmony, type, "FixedUpdate", prefixMethod);
-                    PatchMethod(harmony, type, "LateUpdate", prefixMethod);
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine("Failed to patch type " + type.Name);
-                    Console.WriteLine(ex.ToString());
-                }
+                PatchMethod(harmony, type, "Update", prefixMethod);
+                PatchMethod(harmony, type, "FixedUpdate", prefixMethod);
+                PatchMethod(harmony, type, "LateUpdate", prefixMethod);
+            }
+            catch (Exception ex)
+            {
+                Plugin.Logger.LogWarning("Failed to patch type " + type.Name);
+                Plugin.Logger.LogError(ex);
             }
         }
+    }
 
-        private static void PatchMethod(Harmony harmony, Type type, string methodName, HarmonyMethod prefixMethod)
-        {
-            var method = type.GetMethod(methodName, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
-            if (method != null && !method.IsAbstract && method.DeclaringType == type)
-                harmony.Patch(method, prefix: prefixMethod);
-        }
+    private static void PatchMethod(Harmony harmony, Type type, string methodName, HarmonyMethod prefixMethod)
+    {
+        var method = type.GetMethod(methodName, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
+        if (method != null && !method.IsAbstract && method.DeclaringType == type)
+            harmony.Patch(method, prefix: prefixMethod);
+    }
 
-        private static bool Prefix()
-        {
-            if (FrameStepController.Suspended)
-                return HarmonyHelper.StopExecution;
+    private static bool Prefix()
+    {
+        if (FrameStepController.Suspended)
+            return HarmonyHelper.StopExecution;
 
-            return HarmonyHelper.ContinueExecution;
-        }
+        return HarmonyHelper.ContinueExecution;
     }
 }
