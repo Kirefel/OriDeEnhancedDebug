@@ -64,7 +64,7 @@ public class Plugin : BaseUnityPlugin
         Controllers.Add<FrameStepController>(group: "EnhancedDebug");
     }
 
-    public void Unload()
+    void OnDestroy()
     {
         harmony.UnpatchSelf();
     }
