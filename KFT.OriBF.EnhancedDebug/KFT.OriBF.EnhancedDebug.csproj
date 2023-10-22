@@ -7,16 +7,28 @@
     <Version>1.0.0</Version>
     <LangVersion>latest</LangVersion>
   </PropertyGroup>
+  <ItemGroup>
+    <Compile Remove="lib\**" />
+    <EmbeddedResource Remove="lib\**" />
+    <None Remove="lib\**" />
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="BepInEx.Analyzers" Version="1.*" PrivateAssets="all" />
     <PackageReference Include="BepInEx.Core" Version="5.*" />
     <PackageReference Include="BepInEx.PluginInfoProps" Version="1.*" />
+    <PackageReference Include="OriModding.BF.ConfigMenu" Version="1.0.0" />
     <PackageReference Include="OriModding.BF.Core" Version="1.0.0" />
     <PackageReference Include="UnityEngine.Modules" Version="5.3.2" IncludeAssets="compile" />
   </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFramework.TrimEnd(`0123456789`))' == 'net'">
     <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.2" PrivateAssets="all" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="UnityExplorer.BIE5.Mono">
+      <HintPath>lib\UnityExplorer.BIE5.Mono.dll</HintPath>
+    </Reference>
   </ItemGroup>
 </Project>
