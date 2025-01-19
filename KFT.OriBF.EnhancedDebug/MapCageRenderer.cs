@@ -38,7 +38,7 @@ public class MapCageRenderer : MonoBehaviour
 
     public void OnRenderObject()
     {
-        if (!Plugin.DrawTriggerAreas.Value)
+        if (!Plugin.DrawMapCompletionAreas.Value)
             return;
 
         // This is pretty inefficient so don't render cages for areas that are far away
@@ -52,9 +52,7 @@ public class MapCageRenderer : MonoBehaviour
         
         // GL.
         GL.Begin(GL.TRIANGLES);
-        var c = Color.yellow;
-        c.a = 0.15f;
-        GL.Color(c);
+        GL.Color(Plugin.Colour_MapFace.Value);
 
         foreach (var face in Area.CageStructureTool.Faces)
         {
@@ -77,7 +75,7 @@ public class MapCageRenderer : MonoBehaviour
 
         GL.End();
         GL.Begin(GL.LINES);
-        GL.Color(Color.cyan);
+        GL.Color(Plugin.Colour_MapEdge.Value);
 
         foreach (var edge in Area.CageStructureTool.Edges)
         {

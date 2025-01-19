@@ -12,7 +12,7 @@ internal class PlayerCollisionTriggerAreaPatch
     {
         var visualiser = __instance.gameObject.AddComponent<TriggerAreaVisualiser>();
         visualiser.SetBounds(___m_bounds);
-        visualiser.colour = Color.green;
+        visualiser.colour = Plugin.Colour_Trigger.Value;
     }
 }
 
@@ -24,7 +24,7 @@ internal class PlayerCollisionStayTriggerAreaPatch
     {
         var visualiser = __instance.gameObject.AddComponent<TriggerAreaVisualiser>();
         visualiser.SetBounds(___m_bounds);
-        visualiser.colour = Color.magenta;
+        visualiser.colour = Plugin.Colour_StayTrigger.Value;
     }
 }
 
