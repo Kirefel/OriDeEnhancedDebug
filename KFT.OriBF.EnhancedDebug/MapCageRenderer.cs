@@ -49,11 +49,11 @@ public class MapCageRenderer : MonoBehaviour
         GL.LoadProjectionMatrix(Camera.main.projectionMatrix);
 
         lineMaterial.SetPass(0);
-
+        
         // GL.
         GL.Begin(GL.TRIANGLES);
         var c = Color.yellow;
-        c.a = 0.5f;
+        c.a = 0.15f;
         GL.Color(c);
 
         foreach (var face in Area.CageStructureTool.Faces)
@@ -68,12 +68,23 @@ public class MapCageRenderer : MonoBehaviour
             if (RuntimeArea.GetFaceState(face.ID) == WorldMapAreaState.Visited)
                 continue;
 
-
             for (int i = 0; i < face.Triangles.Count; i++)
             {
                 var v = Area.CageStructureTool.Vertices[face.Vertices[face.Triangles[i]]];
                 GL.Vertex3(v.Position.x, v.Position.y, v.Position.z);
             }
+        }
+
+        GL.End();
+        GL.Begin(GL.LINES);
+        GL.Color(Color.cyan);
+
+        foreach (var edge in Area.CageStructureTool.Edges)
+        {
+            var v1 = Area.CageStructureTool.Vertices[edge.VertexA].Position;
+            var v2 = Area.CageStructureTool.Vertices[edge.VertexB].Position;
+            GL.Vertex3(v1.x, v1.y, v1.z);
+            GL.Vertex3(v2.x, v2.y, v2.z);
         }
 
         GL.End();

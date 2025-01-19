@@ -31,7 +31,7 @@ internal class PlayerCollisionStayTriggerAreaPatch
 public class TriggerAreaVisualiser : MonoBehaviour
 {
     private static Material lineMaterial;
-    private Vector3[] corners;  
+    private Vector3[] corners;
     private string fullName;
     public Color colour;
 
@@ -61,7 +61,7 @@ public class TriggerAreaVisualiser : MonoBehaviour
     {
         if (!Plugin.DrawTriggerAreas.Value)
             return;
-        
+
         var point = Camera.main.WorldToScreenPoint(corners[0]);
         point.y = Screen.height - point.y;
         var c = GUI.color;
@@ -88,10 +88,10 @@ public class TriggerAreaVisualiser : MonoBehaviour
     {
         if (!Plugin.DrawTriggerAreas.Value)
             return;
-        
+
         GL.PushMatrix();
         GL.LoadProjectionMatrix(Camera.main.projectionMatrix);
-        
+
         lineMaterial.SetPass(0);
 
         GL.Begin(GL.LINES);
