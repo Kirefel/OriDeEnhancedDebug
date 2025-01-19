@@ -3,6 +3,7 @@ using BepInEx.Configuration;
 using BepInEx.Logging;
 using HarmonyLib;
 using OriModding.BF.Core;
+using UnityExplorer.UI;
 
 namespace KFT.OriBF.EnhancedDebug;
 
@@ -13,9 +14,11 @@ namespace KFT.OriBF.EnhancedDebug;
 public class Plugin : BaseUnityPlugin
 {
     private Harmony harmony;
+    private Harmony harmonyFs;
 
     public static ConfigEntry<bool> HighAccuracyFrameStep { get; private set; }
     public static ConfigEntry<bool> AutoEnable { get; private set; }
+    public static ConfigEntry<bool> DrawTriggerAreas { get; private set; }
     private ConfigEntry<bool> pauseOnUnityExplorerUI;
 
     public static new ManualLogSource Logger { get; private set; }
@@ -26,23 +29,11 @@ public class Plugin : BaseUnityPlugin
     {
         Logger = base.Logger;
 
-        HighAccuracyFrameStep = Config.Bind(
-            "Debug",
-            "High Accuracy Frame Step",
-            false,
-            "(Experimental) Whether an alternative frame step method should be used. More accurate but not thoroughly tested.");
+        HighAccuracyFrameStep = Config.Bind("Debug", "High Accuracy Frame Step", false, "(Experimental) Whether an alternative frame step method should be used. More accurate but not thoroughly tested.");
+        AutoEnable = Config.Bind("Debug", "Auto Enable Debug Controls", true, "Whether debug controls should be enabled immediately when starting the game.");
+        DrawTriggerAreas = Config.Bind("Debug", "Draw trigger areas", false, "Whether to draw boxes around trigger areas such as spawn triggers.");
 
-        AutoEnable = Config.Bind(
-            "Debug",
-            "Auto Enable Debug Controls",
-            true,
-            "Whether debug controls should be enabled immediately when starting the game.");
-
-        pauseOnUnityExplorerUI = Config.Bind(
-            "Debug",
-            "Pause When Using UnityExplorer",
-            true,
-            "Whether to pause the game while the UnityExplorer UI is visible.");
+        pauseOnUnityExplorerUI = Config.Bind("Debug", "Pause When Using UnityExplorer", true, "Whether to pause the game while the UnityExplorer UI is visible.");
 
         On.PlayerInput.FixedUpdate += (orig, self) =>
         {
@@ -51,10 +42,13 @@ public class Plugin : BaseUnityPlugin
         };
 
         harmony = new Harmony(PluginInfo.PLUGIN_GUID);
+        harmony.PatchAll();
+        
+        harmonyFs = new Harmony(PluginInfo.PLUGIN_GUID + "fs");
         if (HighAccuracyFrameStep.Value)
         {
             Logger.LogInfo("Enabling high accuracy frame step");
-            FrameStepUpdateHooks.PatchAll(harmony);
+            FrameStepUpdateHooks.PatchAll(harmonyFs);
         }
 
         HighAccuracyFrameStep.SettingChanged += (sender, e) =>
@@ -62,12 +56,12 @@ public class Plugin : BaseUnityPlugin
             if (HighAccuracyFrameStep.Value)
             {
                 Logger.LogInfo("Enabling high accuracy frame step");
-                FrameStepUpdateHooks.PatchAll(harmony);
+                FrameStepUpdateHooks.PatchAll(harmonyFs);
             }
             else
             {
                 Logger.LogInfo("Disabling high accuracy frame step");
-                harmony.UnpatchSelf();
+                harmonyFs.UnpatchSelf();
             }
         };
 
@@ -84,6 +78,7 @@ public class Plugin : BaseUnityPlugin
     }
 
     bool suspended = false;
+
     void FixedUpdate()
     {
         if (!UnityExplorerEnabled)
@@ -95,12 +90,12 @@ public class Plugin : BaseUnityPlugin
     private void HandleUnityExplorer()
     {
         // This needs to be called from a different method otherwise it will get compiled and error if the plugin isn't loaded
-        if (suspended && (!UnityExplorer.UI.UIManager.ShowMenu || !pauseOnUnityExplorerUI.Value))
+        if (suspended && (!UIManager.ShowMenu || !pauseOnUnityExplorerUI.Value))
         {
             SuspensionManager.ResumeAll();
             suspended = false;
         }
-        else if (!suspended && UnityExplorer.UI.UIManager.ShowMenu && pauseOnUnityExplorerUI.Value)
+        else if (!suspended && UIManager.ShowMenu && pauseOnUnityExplorerUI.Value)
         {
             SuspensionManager.SuspendAll();
             suspended = true;
