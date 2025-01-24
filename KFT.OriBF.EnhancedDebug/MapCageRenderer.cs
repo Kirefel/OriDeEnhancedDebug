@@ -50,7 +50,6 @@ public class MapCageRenderer : MonoBehaviour
 
         lineMaterial.SetPass(0);
         
-        // GL.
         GL.Begin(GL.TRIANGLES);
         GL.Color(Plugin.Colour_MapFace.Value);
 

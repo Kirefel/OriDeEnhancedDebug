@@ -1,18 +1,21 @@
 # Enhanced Debug
 
-*Install using the [Mod Manager](https://github.com/Kirefel/bf-mod-manager)*
+*Download the full package and extract into the `Ori DE` folder. This includes the mod loader and is intended work with an unmodified game.*
 
 Currently adds 2 features while debug controls are on:
 
 * Right click on the main map to teleport to the cursor position
 * Frame step - press `.` to toggle and `/` to step one frame
 
+Trigger area and map completion areas can be enabled in the settings.
+
 ## UnityExplorer integration
 
 Integrates with [UnityExplorer](https://github.com/sinai-dev/UnityExplorer) to:
 
 * Pause the game while the UnityExplorer UI is open
-* Provide shortcuts to useful objects (`GameController`, `SeinCharacter`)
+
+Download the BepInEx 5 version (`UnityExplorer.BepInEx5.Mono.zip`) and extract to `Ori DE/BepInEx/plugins/sinai-dev-UnityExplorer`
 
 ## Experimental frame step
 
